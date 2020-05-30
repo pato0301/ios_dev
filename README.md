@@ -8,3 +8,13 @@ The app will call an API that will return 151 pokemon. Then those Pokemon will b
 
 - Xcode 11
 - Swift 5
+- APIs
+- Struct
+- Classes
+
+## Project
+
+The final development of this porject is by Patricio Villanueva 30/05/2020. 
+
+It is base on CS50 course
+Copyright © 2020 CS50. All rights reserved.
