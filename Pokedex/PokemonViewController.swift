@@ -15,7 +15,6 @@ class PokemonViewController: UIViewController {
     @IBOutlet var catchButton: UIButton!
     @IBOutlet var pokemonPic: UIImageView!
     
-//    var caught : Bool = false
     
     func capitalize(text: String) -> String {
         return text.prefix(1).uppercased() + text.dropFirst()
@@ -109,15 +108,6 @@ class PokemonViewController: UIViewController {
             catchButton.setTitle("Release", for: .normal)
             pokedex.caught[nameLabel.text!] = true
             savedPokemon.set(true, forKey: nameLabel.text!)
-<<<<<<< HEAD
-        }
-        else{
-            print("catch")
-            catchButton.setTitle("Catch", for: .normal)
-            pokedex.caught[nameLabel.text!] = false
-            savedPokemon.set(false, forKey: nameLabel.text!)
-=======
->>>>>>> dab04deccbf688f950eebef5f245750b862bcf13
         }
         else{
             print("catch")
@@ -125,7 +115,6 @@ class PokemonViewController: UIViewController {
             pokedex.caught[nameLabel.text!] = false
             savedPokemon.set(false, forKey: nameLabel.text!)
         }
-        
         print("Button pressed \(pokedex.caught)")
         
         print("Button pressed \(pokedex.caught)")

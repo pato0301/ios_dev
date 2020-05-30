@@ -72,8 +72,6 @@ class PokemonListViewController: UITableViewController, UISearchBarDelegate {
         
         let searchPokText : String = searchText.lowercased()
         
-//        let wantedPokemon = pokemon.map { $0.name }
-        
         if searchText.isEmpty {
             
             filteredPokemon = pokemon
