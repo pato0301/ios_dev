@@ -29,3 +29,16 @@ struct Pokedex {
  var caught = [String: Bool]()
 
  }
+
+struct PokemonSprite: Codable {
+    
+    let name: String
+    let sprites: SpriteInfo
+    
+}
+
+struct SpriteInfo: Codable {
+    
+    let front_default: String
+    let front_shiny: String
+}

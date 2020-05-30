@@ -13,6 +13,7 @@ class PokemonViewController: UIViewController {
     @IBOutlet var type1Label: UILabel!
     @IBOutlet var type2Label: UILabel!
     @IBOutlet var catchButton: UIButton!
+    @IBOutlet var pokemonPic: UIImageView!
     
 //    var caught : Bool = false
     
@@ -28,7 +29,30 @@ class PokemonViewController: UIViewController {
         type1Label.text = ""
         type2Label.text = ""
 
+        loadSprites()
         loadPokemon()
+    }
+    
+    func loadSprites(){
+        URLSession.shared.dataTask(with: URL(string: url)!){ (data, response, error) in
+            guard let data = data else{
+                return
+            }
+            do {
+                let result = try JSONDecoder().decode(PokemonSprite.self, from: data)
+                DispatchQueue.main.async {
+                    let spriteURL = URL(string: result.sprites.front_default)
+                    print(spriteURL!)
+                    
+                    let pokDataPic = try? Data(contentsOf: spriteURL!)
+                    
+                    self.pokemonPic.image = UIImage(data: pokDataPic!)
+                }
+            }
+            catch let error {
+                print(error)
+            }
+        }.resume()
     }
 
     func loadPokemon() {
