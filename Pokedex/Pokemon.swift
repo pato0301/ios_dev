@@ -29,7 +29,6 @@ struct Pokedex {
  var caught = [String: Bool]()
 
  }
-<<<<<<< HEAD
 
 struct PokemonSprite: Codable {
     
@@ -43,5 +42,43 @@ struct SpriteInfo: Codable {
     let front_default: String
     let front_shiny: String
 }
-=======
->>>>>>> dab04deccbf688f950eebef5f245750b862bcf13
+
+struct PokemonSpecies: Codable {
+    
+    let name: String
+    var species : SpeciesInfo
+    
+}
+
+struct SpeciesInfo: Codable {
+
+    let name : String
+    let url: String
+}
+
+struct FlavorTextEntries: Codable {
+    
+    let flavor_text_entries: [FlavorText]
+    //let language:
+    
+}
+
+struct FlavorText: Codable {
+    
+    let flavor_text: String
+    let language : Languages
+    let version : Version
+    
+}
+
+struct Languages: Codable {
+    
+    let name: String
+    let url: String
+}
+
+struct Version: Codable {
+    
+    let name: String
+    let url: String
+}

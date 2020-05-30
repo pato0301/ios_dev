@@ -14,6 +14,8 @@ class PokemonViewController: UIViewController {
     @IBOutlet var type2Label: UILabel!
     @IBOutlet var catchButton: UIButton!
     @IBOutlet var pokemonPic: UIImageView!
+    @IBOutlet var pokeDescription: UITextView!
+    
     
     
     func capitalize(text: String) -> String {
@@ -27,11 +29,48 @@ class PokemonViewController: UIViewController {
         numberLabel.text = ""
         type1Label.text = ""
         type2Label.text = ""
+        pokeDescription.text = ""
 
         loadSprites()
         loadPokemon()
+        loadSpecies()
     }
     
+    // Get Species from Red Version of Pokemon
+    func loadSpecies(){
+        // First get the API's URL to get the text description
+        URLSession.shared.dataTask(with: URL(string: url)!){ (data, response, error) in
+        guard let data = data else{
+            return
+        }
+        do {
+                let result = try JSONDecoder().decode(PokemonSpecies.self, from: data)
+                let urlText = result.species.url
+            // Call the second URL to get the text and the version of the Pokemon
+                URLSession.shared.dataTask(with: URL(string: urlText)!){ (dataText, response, error) in
+                        guard let dataText = dataText else{
+                            return
+                        }
+                        do {
+                            let result = try JSONDecoder().decode(FlavorTextEntries.self, from: dataText)
+                            for description in result.flavor_text_entries{
+                                if description.language.name == "en" && description.version.name == "red"{
+                                    self.pokeDescription.text = self.capitalize(text: description.flavor_text)
+                                }
+                            }
+                            }
+                            catch let error {
+                                print(error)
+                            }
+                        }.resume()
+            }
+            catch let error {
+                print(error)
+            }
+        }.resume()
+    }
+    
+    // Load the image of the pokemon
     func loadSprites(){
         URLSession.shared.dataTask(with: URL(string: url)!){ (data, response, error) in
             guard let data = data else{
@@ -41,7 +80,6 @@ class PokemonViewController: UIViewController {
                 let result = try JSONDecoder().decode(PokemonSprite.self, from: data)
                 DispatchQueue.main.async {
                     let spriteURL = URL(string: result.sprites.front_default)
-                    print(spriteURL!)
                     
                     let pokDataPic = try? Data(contentsOf: spriteURL!)
                     
@@ -54,12 +92,12 @@ class PokemonViewController: UIViewController {
         }.resume()
     }
 
+    // Load Pokemon Name, Number and Type
     func loadPokemon() {
         URLSession.shared.dataTask(with: URL(string: url)!) { (data, response, error) in
             guard let data = data else {
                 return
             }
-
             do {
                 let result = try JSONDecoder().decode(PokemonResult.self, from: data)
                 DispatchQueue.main.async {
@@ -85,10 +123,10 @@ class PokemonViewController: UIViewController {
 
                     for typeEntry in result.types {
                         if typeEntry.slot == 1 {
-                            self.type1Label.text = typeEntry.type.name
+                            self.type1Label.text = self.capitalize(text: typeEntry.type.name)
                         }
                         else if typeEntry.slot == 2 {
-                            self.type2Label.text = typeEntry.type.name
+                            self.type2Label.text = self.capitalize(text: typeEntry.type.name)
                         }
                     }
                 }
@@ -99,25 +137,19 @@ class PokemonViewController: UIViewController {
         }.resume()
     }
     
+    // Cathc button. If you catch this pokemn then you can click the button
+    // So you now know you have this one
     @IBAction func toggleCatch(_ sender: UIButton) {
         
-        print(pokedex)
-        
         if pokedex.caught[nameLabel.text!] == false || pokedex.caught[nameLabel.text!] == nil{
-            print("release")
             catchButton.setTitle("Release", for: .normal)
             pokedex.caught[nameLabel.text!] = true
             savedPokemon.set(true, forKey: nameLabel.text!)
         }
         else{
-            print("catch")
             catchButton.setTitle("Catch", for: .normal)
             pokedex.caught[nameLabel.text!] = false
             savedPokemon.set(false, forKey: nameLabel.text!)
         }
-        print("Button pressed \(pokedex.caught)")
-        
-        print("Button pressed \(pokedex.caught)")
-        
         }
 }
