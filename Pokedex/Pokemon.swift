@@ -23,3 +23,9 @@ struct PokemonTypeEntry: Codable {
 struct PokemonType: Codable {
     let name: String
 }
+
+struct Pokedex {
+ 
+ var caught = [String: Bool]()
+
+ }
