@@ -1,7 +1,12 @@
 import UIKit
 
+var savedPokemon = UserDefaults.standard
+var pokedex = Pokedex.init(caught: [ : ])
+
 class PokemonViewController: UIViewController {
     var url: String!
+    
+    
 
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var numberLabel: UILabel!
@@ -9,7 +14,7 @@ class PokemonViewController: UIViewController {
     @IBOutlet var type2Label: UILabel!
     @IBOutlet var catchButton: UIButton!
     
-    var caught : Bool = false
+//    var caught : Bool = false
     
     func capitalize(text: String) -> String {
         return text.prefix(1).uppercased() + text.dropFirst()
@@ -38,6 +43,22 @@ class PokemonViewController: UIViewController {
                     self.navigationItem.title = self.capitalize(text: result.name)
                     self.nameLabel.text = self.capitalize(text: result.name)
                     self.numberLabel.text = String(format: "#%03d", result.id)
+                    
+                    if savedPokemon.bool(forKey: self.nameLabel.text!) == true {
+                    
+                    pokedex.caught[self.nameLabel.text!] = true
+                    }
+                    
+                    if pokedex.caught[self.nameLabel.text!] == false || pokedex.caught[self.nameLabel.text!] == nil  {
+                            
+                        self.catchButton.setTitle("Catch", for: .normal)
+                           
+                       }
+                    else if pokedex.caught[self.nameLabel.text!] == true {
+                            
+                        self.catchButton.setTitle("Release", for: .normal)
+
+                       }
 
                     for typeEntry in result.types {
                         if typeEntry.slot == 1 {
@@ -57,16 +78,22 @@ class PokemonViewController: UIViewController {
     
     @IBAction func toggleCatch(_ sender: UIButton) {
         
-        if caught{
-            print("catch")
-            catchButton.setTitle("Catch", for: .normal)
-            caught = false
-        }
-        else{
+        print(pokedex)
+        
+        if pokedex.caught[nameLabel.text!] == false || pokedex.caught[nameLabel.text!] == nil{
             print("release")
             catchButton.setTitle("Release", for: .normal)
-            caught = true
+            pokedex.caught[nameLabel.text!] = true
+            savedPokemon.set(true, forKey: nameLabel.text!)
         }
+        else{
+            print("catch")
+            catchButton.setTitle("Catch", for: .normal)
+            pokedex.caught[nameLabel.text!] = false
+            savedPokemon.set(false, forKey: nameLabel.text!)
+        }
+        
+        print("Button pressed \(pokedex.caught)")
         
         }
 }
